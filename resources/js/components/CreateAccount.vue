@@ -1,3 +1,4 @@
+
 <template>
     <div class="center">
         <div>
@@ -33,6 +34,22 @@ export default {
 
         createAccount () {
 
+            const formData = new FormData();
+            formData.append('name', this.name);
+            formData.append('website', this.website);
+            formData.append('phone', this.phone);
+
+            const headers = { 
+                'Content-Type': 'multipart/form-data',
+                'Accept': 'application/json',
+             };
+
+            axios.post('api/accounts', formData, { headers }).then((res) => {
+                this.result = res.data
+            }).catch((res) => {
+                console.log(res)
+                this.result = res.response.data
+            })
 
         }
 
