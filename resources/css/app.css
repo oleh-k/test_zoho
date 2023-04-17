@@ -1,0 +1,14 @@
+.button {
+    border: solid 2px #48b7fc;
+    border-radius: 5px;
+    padding: 5px 30px;
+    margin: 5px 10px;
+}
+
+.parent-center {
+    text-align: center;
+}
+
+.center {
+    margin: auto;
+}
