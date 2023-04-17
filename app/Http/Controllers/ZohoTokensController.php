@@ -41,5 +41,34 @@ class ZohoTokensController extends Controller
 
     }
 
+    public function getAccessToken(string $refreshToken = '')
+    {
+        $sessionRefreshToken = Session::get('refresh_token');
+        if ($refreshToken == '') {
+            if ($sessionRefreshToken != '' && $sessionRefreshToken != null) $refreshToken = $sessionRefreshToken;
+            else return response(['result' => 'empty refresh_token'], 401);
+        }
+
+        $arr = [
+            'refresh_token' => $refreshToken,
+            'client_id' => $this->client_id,
+            'client_secret' => $this->client_secret,
+            'redirect_uri' => $this->redirect_uri,
+            'grant_type' => 'refresh_token',
+        ];
+
+        $response = Http::asForm()->post('https://accounts.zoho.eu/oauth/v2/token', $arr);
+
+        $object = $response->object();
+
+        $access_token = $object->access_token;
+
+        Session::put('access_token', $access_token);
+
+        $result['access_token'] = $access_token;
+
+        return response($result, 200);
+
+    }
 
 }
