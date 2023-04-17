@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
+
+class ZohoTokensController extends Controller
+{
+    
+    private $client_id = '1000.D64CQK4BEWB7AX7YIKRSB79FDGN6TP';
+    private $client_secret = '1843a6b0bafb805c174d8eec9539c86224f6177cd3';
+    private $redirect_uri = 'http://localhost:8000/api/grand_token';
+    private $scope = 'ZohoCRM.modules.ALL';
+
+    public function getRefreshToken(Request $request)
+    {
+        
+        $code = $request->query('code');
+
+        $arr = [
+            'grant_type' => 'authorization_code',
+            'client_id' => $this->client_id,
+            'client_secret' => $this->client_secret,
+            'code' => $code,
+            'redirect_uri' => $this->redirect_uri,
+            'scope' => $this->scope,
+            'state' => 'test',
+        ];
+
+        $response = Http::asForm()->post('https://accounts.zoho.eu/oauth/v2/token', $arr);
+        $json = $response->json();
+        $object = $response->object();
+        $refresh_token = $object->refresh_token;
+        $access_token = $object->access_token;
+
+        Session::put('json', $json);
+        Session::put('refresh_token', $refresh_token);
+        Session::put('access_token', $access_token);
+
+    }
+
+
+}
