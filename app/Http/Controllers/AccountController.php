@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
 {
@@ -21,6 +22,25 @@ class AccountController extends Controller
     public function store(Request $request)
     {
 
+        $validationRule = [
+            "name" => ["required", "min:3", "max:255", ],
+            "website" => ["required", "regex:/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i"],
+            "phone" => ["required", "regex:/^[\+]{0,1}380([0-9]{9})$/"],
+        ];
+
+        $validationData = Validator::make($request->all(), $validationRule);
+
+        if ($validationData->fails()) {
+
+            $response = [
+                'success' => false,
+                'message' => 'Validation failed',
+                'fails' => $validationData->errors()
+            ];
+
+            return response($response, 422);
+
+        }
 
         $account = Account::create($request->all());
 
