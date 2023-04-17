@@ -16,7 +16,10 @@ import { createApp } from 'vue';
 const app = createApp({});
 
 import GetToken from "./components/GetToken.vue"
+import CreateAccount from "./components/CreateAccount.vue"
+
 app.component('get-token', GetToken);
+app.component('create-account', CreateAccount);
 
 /**
  * The following block of code may be used to automatically register your

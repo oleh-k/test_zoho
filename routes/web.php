@@ -20,3 +20,7 @@ Route::get('/', function () {
 Route::get('/get_token', function () {
     return view('getToken');
 });
+
+Route::get('/create_account', function () {
+    return view('createAccount');
+});
