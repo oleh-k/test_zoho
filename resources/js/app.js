@@ -18,10 +18,12 @@ const app = createApp({});
 import GetToken from "./components/GetToken.vue"
 import CreateDeal from "./components/CreateDeal.vue"
 import CreateAccount from "./components/CreateAccount.vue"
+import AccountList from "./components/AccountList.vue"
 
 app.component('get-token', GetToken);
 app.component('create-deal', CreateDeal);
 app.component('create-account', CreateAccount);
+app.component('account-list', AccountList);
 
 /**
  * The following block of code may be used to automatically register your

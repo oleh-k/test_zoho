@@ -28,3 +28,7 @@ Route::get('/create_deal', function () {
 Route::get('/create_account', function () {
     return view('createAccount');
 });
+
+Route::get('/account_list', function () {
+    return view('accountList');
+});
