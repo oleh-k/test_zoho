@@ -18,6 +18,7 @@ class Account extends Model
         'name',
         'website',
         'phone',
+        'zoho_account_id',
     ];
 
 
@@ -31,6 +32,7 @@ class Account extends Model
         'name',
         'website',
         'phone',
+        'zoho_account_id',
     ];
 
 }

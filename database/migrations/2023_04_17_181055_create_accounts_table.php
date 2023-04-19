@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('website');
             $table->string('phone');
+            $table->string('zoho_account_id');
             $table->timestamps();
         });
     }
