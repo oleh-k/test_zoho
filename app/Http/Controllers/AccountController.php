@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
@@ -42,15 +43,56 @@ class AccountController extends Controller
 
         }
 
-        $account = Account::create($request->all());
+        
 
-        $response = [
-            "success" => true,
-            "account_id" => $account->id,
-            "message" => "New account successfully registered"
+
+        $headers = [
+            'Authorization' => 'Zoho-oauthtoken 1000.f7e7914c392f7ebaa1edfb23aae4423e.39a4dfe8e90ac4e226b91738f5530d39',
+            'Content-Type' => 'application/json',
         ];
 
-        return response($response, 200);
+        $arr = [
+            "data" => [
+                [
+                    "Account_Name" => $request->name, 
+                    "Website" => $request->website,
+                    "Phone" => $request->phone
+                ]
+            ]
+        ];
+        
+        $zohoAccount = Http::withHeaders($headers)->post('https://www.zohoapis.eu/crm/v4/Accounts', $arr);
+        
+        if ($zohoAccount->status() === 201) {
+            
+            $result = $zohoAccount->object()->data[0];
+            $zohoAccountId = $result->details->id;
+    
+            $dataAccount['name'] = $request->name;
+            $dataAccount['website'] = $request->website;
+            $dataAccount['phone'] = $request->phone;
+            $dataAccount['zoho_account_id'] = $zohoAccountId;
+            $account = Account::create($dataAccount);
+    
+            $response = [
+                "success" => true,
+                "zohoAccountId" => $zohoAccountId,
+                "account_id" => $account->id,
+                "message" => "New account successfully registered"
+            ];
+
+            return response($response, 200);
+        } else {
+
+            $response = [
+                'success' => false,
+                'message' => 'Zoho error',
+                'fails' => json_encode($zohoAccount->body()),
+            ];
+
+            return response($response, 422);
+        }
+
     }
 
     /**
