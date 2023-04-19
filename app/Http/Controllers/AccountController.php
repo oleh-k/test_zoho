@@ -13,7 +13,15 @@ class AccountController extends Controller
      */
     public function index()
     {
-        //
+        $accounts = Account::all();
+
+        $response = [
+            'success' => true,
+            'message' => 'OK',
+            'data' => $accounts
+        ];
+        
+        return response($response, 200);
     }
 
     /**
