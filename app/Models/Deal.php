@@ -17,6 +17,8 @@ class Deal extends Model
     protected $fillable = [
         'name',
         'stage_id',
+        'zoho_deal_id',
+        'account_id',
     ];
 
 
@@ -29,5 +31,7 @@ class Deal extends Model
         'id',
         'name',
         'stage_id',
+        'zoho_deal_id',
+        'account_id',
     ];
 }

@@ -19,6 +19,15 @@ return new class extends Migration
                 ->references('id')
                 ->on('stages')
                 ->onDelete('cascade');
+
+            $table->string('zoho_deal_id')->default('');
+
+            $table->unsignedBigInteger('account_id');
+            $table->foreign('account_id')
+                ->references('id')
+                ->on('accounts')
+                ->onDelete('cascade');
+
             $table->timestamps();
         });
     }
