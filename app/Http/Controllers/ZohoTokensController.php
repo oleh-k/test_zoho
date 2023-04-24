@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ZohoToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Session;
 
 class ZohoTokensController extends Controller
 {
@@ -30,20 +30,27 @@ class ZohoTokensController extends Controller
         ];
 
         $response = Http::asForm()->post('https://accounts.zoho.eu/oauth/v2/token', $arr);
-        $json = $response->json();
         $object = $response->object();
         $refresh_token = $object->refresh_token;
         $access_token = $object->access_token;
 
-        Session::put('json', $json);
-        Session::put('refresh_token', $refresh_token);
-        Session::put('access_token', $access_token);
+        ZohoToken::truncate();
+
+        $data = [
+            'refresh_token' => $refresh_token,
+            'access_token' => $access_token,
+        ];
+        ZohoToken::create($data);
+
 
     }
 
     public function getAccessToken(string $refreshToken = '')
     {
-        $sessionRefreshToken = Session::get('refresh_token');
+        // $sessionRefreshToken = Session::get('refresh_token');
+        $zohoToken = ZohoToken::all();
+        $id = $zohoToken[0]->id;
+        $sessionRefreshToken = $zohoToken[0]->refresh_token;
         if ($refreshToken == '') {
             if ($sessionRefreshToken != '' && $sessionRefreshToken != null) $refreshToken = $sessionRefreshToken;
             else return response(['result' => 'empty refresh_token'], 401);
@@ -63,7 +70,11 @@ class ZohoTokensController extends Controller
 
         $access_token = $object->access_token;
 
-        Session::put('access_token', $access_token);
+        $data = [
+            'access_token' => $access_token
+        ];
+        $zohoToken = ZohoToken::find($id);
+        $zohoToken->update($data);
 
         $result['access_token'] = $access_token;
 
