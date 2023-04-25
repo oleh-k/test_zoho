@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\ZohoToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -45,9 +46,11 @@ class AccountController extends Controller
 
         
 
+        $zohoToken = ZohoToken::all();
+        $access_token = $zohoToken[0]->access_token;
 
         $headers = [
-            'Authorization' => 'Zoho-oauthtoken 1000.f7e7914c392f7ebaa1edfb23aae4423e.39a4dfe8e90ac4e226b91738f5530d39',
+            'Authorization' => 'Zoho-oauthtoken '.$access_token,
             'Content-Type' => 'application/json',
         ];
 
