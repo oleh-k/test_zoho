@@ -7,6 +7,7 @@
                     <th>Name</th>
                     <th>Website</th>
                     <th>Phone</th>
+                    <th>Deal</th>
                 </tr>
                 <tr v-for="account in accounts">
                     <td>
@@ -17,6 +18,9 @@
                     </td>
                     <td>
                         {{ account.phone }}
+                    </td>
+                    <td>
+                        <a :href="zohoLinkDeal + account.zoho_deal_id" target="_blank" title="open in zoho">{{ account.deal_name }}</a>
                     </td>
                 </tr>
             </table>
@@ -33,13 +37,14 @@ export default {
         return {
             accounts: [{website:'', name:''}],
             zohoLink: 'https://crm.zoho.eu/crm/org20087641148/tab/Accounts/',
+            zohoLinkDeal: 'https://crm.zoho.eu/crm/org20087641148/tab/Potentials/',
         }
     },
     methods: {
 
         getAccounts () {
 
-            axios.get('api/accounts').then((res) => {
+            axios.get('api/accounts/accountsAndDeals').then((res) => {
                 console.log(res.data)
                 this.accounts = res.data.data
             }).catch((res) => {

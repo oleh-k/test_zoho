@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use App\Models\ZohoToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,6 +17,22 @@ class AccountController extends Controller
     public function index()
     {
         $accounts = Account::all();
+
+        $response = [
+            'success' => true,
+            'message' => 'OK',
+            'data' => $accounts
+        ];
+        
+        return response($response, 200);
+    }
+
+    public function accountsAndDeals()
+    {
+        $accounts = DB::table('accounts')
+            ->leftJoin('deals', 'accounts.id', '=', 'deals.account_id')
+            ->select(['accounts.*', 'deals.zoho_deal_id', 'deals.name AS deal_name'])
+            ->get();
 
         $response = [
             'success' => true,

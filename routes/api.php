@@ -21,6 +21,7 @@ Route::get('/grand_token', [ZohoTokensController::class, 'getRefreshToken']);
 
 Route::get('/refresh_token', [ZohoTokensController::class, 'getAccessToken']);
 
+Route::get('/accounts/accountsAndDeals', [AccountController::class, 'accountsAndDeals']);
 Route::resource('/accounts', AccountController::class);
 
 Route::resource('/deals', DealController::class);
