@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use App\Models\Deal;
 use App\Models\Stage;
+use App\Models\ZohoToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -69,8 +70,11 @@ class DealController extends Controller
         $zohoAccountId = $account->zoho_account_id;
         $zohoAccountName = $account->name;
 
+        $zohoToken = ZohoToken::all();
+        $access_token = $zohoToken[0]->access_token;
+
         $headers = [
-            'Authorization' => 'Zoho-oauthtoken 1000.8ba1fbf2e2e15e4246d0b295b05536cb.b10b95d4e0e0815db2c73c043e9b72da',
+            'Authorization' => 'Zoho-oauthtoken '.$access_token,
             'Content-Type' => 'application/json',
         ];
 
