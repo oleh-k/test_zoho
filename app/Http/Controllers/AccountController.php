@@ -7,6 +7,7 @@ use App\Models\ZohoToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
@@ -71,8 +72,7 @@ class AccountController extends Controller
 
         
 
-        $zohoToken = ZohoToken::all();
-        $access_token = $zohoToken[0]->access_token;
+        $access_token = Redis::get('access_token');
 
         $headers = [
             'Authorization' => 'Zoho-oauthtoken '.$access_token,

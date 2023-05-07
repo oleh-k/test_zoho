@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ZohoToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
 
 class ZohoTokensController extends Controller
 {
@@ -34,23 +35,17 @@ class ZohoTokensController extends Controller
         $refresh_token = $object->refresh_token;
         $access_token = $object->access_token;
 
-        ZohoToken::truncate();
-
-        $data = [
-            'refresh_token' => $refresh_token,
-            'access_token' => $access_token,
-        ];
-        ZohoToken::create($data);
+        Redis::set('refresh_token', $refresh_token);
+        Redis::set('access_token', $access_token);
 
 
     }
 
     public function getAccessToken(string $refreshToken = '')
     {
-        // $sessionRefreshToken = Session::get('refresh_token');
-        $zohoToken = ZohoToken::all();
-        $id = $zohoToken[0]->id;
-        $sessionRefreshToken = $zohoToken[0]->refresh_token;
+
+        $sessionRefreshToken = Redis::get('refresh_token');
+
         if ($refreshToken == '') {
             if ($sessionRefreshToken != '' && $sessionRefreshToken != null) $refreshToken = $sessionRefreshToken;
             else return response(['result' => 'empty refresh_token'], 401);
@@ -70,11 +65,7 @@ class ZohoTokensController extends Controller
 
         $access_token = $object->access_token;
 
-        $data = [
-            'access_token' => $access_token
-        ];
-        $zohoToken = ZohoToken::find($id);
-        $zohoToken->update($data);
+        Redis::set('access_token', $access_token);
 
         $result['access_token'] = $access_token;
 
